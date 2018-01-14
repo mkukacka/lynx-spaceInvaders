@@ -43,7 +43,7 @@ objects = lynx-160-102-16.o lynx-stdjoy.o \
 all: $(target)
 
 $(target) : $(objects)
-	$(CL) -t $(SYS) -o $@ $(objects) lynx.lib 
+	$(CL) -t $(SYS) -C lynx-coll.cfg -o $@ $(objects) lynx.lib 
 
 clean:
 	$(RM) *.tgi

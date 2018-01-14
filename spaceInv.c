@@ -6,17 +6,16 @@
 #include <peekpoke.h>
 #include <joystick.h>
 
+#include <consts.h>
+#include <sprites.h>
+
 extern char lynxtgi[];
 extern char lynxjoy[];
-
-extern char pal[];
 
 int xpos = 30, ypos = 40;
 
 void show_screen()
 {
-	char text[20];
-
 	// Clear current screen
 	tgi_clear();
 	
@@ -24,8 +23,14 @@ void show_screen()
 	tgi_setcolor(COLOR_WHITE);
 	tgi_outtextxy(xpos, ypos, "Hello world!");
 
+	tgi_sprite(&ship1.sprite);
+
 	// last, draw the screen to buffer
 	tgi_updatedisplay();
+}
+
+void setup_sprites(){
+	// TODO
 }
 
 void initialize()
