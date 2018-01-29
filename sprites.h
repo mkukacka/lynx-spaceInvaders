@@ -11,3 +11,15 @@ typedef struct {
   int initx, inity; // initial position in the grid of ships
 } sprite_t;
 
+typedef struct {
+  char collindex;   // collision index
+  SCB_REHV sprite;  // sprite structure with position and size, without stretch and tilt (from _suzy.h)
+  PENPAL_1;   // pallete structure for 1-bit color pallete (1 color and background) (from _suzy.h)
+} sprite_pl;
+
+typedef struct {
+  char collindex;   // collision index
+  SCB_REHV sprite;  // sprite structure with position and size, without stretch and tilt (from _suzy.h)
+  PENPAL_1;   // pallete structure for 1-bit color pallete (1 color and background) (from _suzy.h)
+} sprite_shot;
+

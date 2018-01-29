@@ -13,6 +13,7 @@ extern char lynxtgi[];
 extern char lynxjoy[];
 
 int xpos = 10, ypos = 10;
+char fire1 = 0, fire2 = 0;
 
 char SINV_NUMSHIPSX = 10;
 char SINV_NUMSHIPSY = 6;
@@ -21,20 +22,31 @@ char SINV_SHIPGAPY = 2;
 char SHIPWIDTH = 6;
 char SHIPHEIGHT = 6;
 
+sprite_pl player;
 sprite_t enemies[60];
+sprite_shot shot;
 
 void show_screen()
 {
 	char i;
 	// Clear current screen
 	tgi_clear();
+
+	// position and draw shot if fired
 	
+	// position ships
 	for(i=0; i<SINV_NUMSHIPSY * SINV_NUMSHIPSX; ++i){
 		enemies[i].sprite.hpos = enemies[i].initx + xpos;
 		enemies[i].sprite.vpos = enemies[i].inity + ypos;
 	}
-	//tgi_sprite(&ship1.sprite);
+
+	// draw ships
 	tgi_sprite(&(enemies[SINV_NUMSHIPSY * SINV_NUMSHIPSX - 1].sprite));
+
+	// player sprite
+	player.sprite.hpos = 2 * xpos;
+	player.sprite.vpos = 85;
+	tgi_sprite(&(player.sprite));
 	
 	// draw score and live counter
 	tgi_setcolor(COLOR_WHITE);
@@ -81,6 +93,24 @@ void setup_sprites(){
 			next = &sprite->sprite;
 		}
 	}
+
+	// player sprite
+	player.sprite.sprctl0 = BPP_1 | TYPE_NORMAL;
+	player.sprite.sprctl1 = REHV;
+	player.sprite.sprcoll = 2;
+	player.sprite.data = singlepixel_data;
+	player.sprite.hsize = 0x1000;
+	player.sprite.vsize = 0x0600;
+	player.penpal[0] = COLOR_WHITE;
+
+	// shot sprite
+	shot.sprite.sprctl0 = BPP_1 | TYPE_NORMAL;
+	shot.sprite.sprctl1 = REHV;
+	shot.sprite.sprcoll = 3;
+	shot.sprite.data = singlepixel_data;
+	shot.sprite.hsize = 0x0100;
+	shot.sprite.vsize = 0x0400;
+	shot.penpal[0] = COLOR_RED;
 }
 
 void initialize()
@@ -125,6 +155,17 @@ void main(void)
 		}
 		if(JOY_BTN_RIGHT(joy)){
 			xpos += 1;
+		}
+
+		if(JOY_BTN_FIRE(joy)){
+			fire1 = 1;
+		} else {
+			fire1 = 0;
+		}
+		if(JOY_BTN_FIRE2(joy)){
+			fire2 = 1;
+		} else {
+			fire2 = 0;
 		}
 		
         // drawing screen
