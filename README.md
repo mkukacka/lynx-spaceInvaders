@@ -21,3 +21,5 @@ Steps:
 * Sprites - alternating ship drawings, nice player drawing
 * Intro screen
 * High score screen
+
+Testing mobile development
