@@ -1,0 +1,67 @@
+CC=cc65
+AS=ca65 
+CL=cl65 
+SP=sp65
+CO=co65
+CP=cp 
+RM=rm -f 
+ECHO=echo 
+TOUCH=touch 
+
+CC65_HOME=/data/data/com.termux/files/usr/lib/cc65
+CC65_INC=$(CC65_HOME)/include
+CC65_ASMINC=$(CC65_HOME)/asminc
+LD65_CFG=/data/data/com.termux/files/usr/lib/cc65/cfg
+LD65_LIB=/data/data/com.termux/files/usr/lib/cc65/lib
+LD65_OBJ=/data/data/com.termux/files/usr/lib/cc65/obj
+CA65_INC=/data/data/com.termux/files/usr/lib/cc65/asminc
+
+.SUFFIXES : .c .s .o .asm .bmp .pal .spr
+
+SYS=lynx
+
+CODE_SEGMENT=CODE
+DATA_SEGMENT=DATA
+RODATA_SEGMENT=RODATA
+BSS_SEGMENT=BSS
+
+SEGMENTS=--code-name $(CODE_SEGMENT) \
+				--rodata-name $(RODATA_SEGMENT) \
+				--bss-name $(BSS_SEGMENT) \
+				--data-name $(DATA_SEGMENT)
+
+# The flag for adding stuff to a library
+ARFLAGS=a
+
+# The flags for compiling C-code
+CFLAGS=-I . -t $(SYS) --add-source -O -Or -Cl -Os
+
+
+# Rule for making a *.o file out of a *.c file
+.c.o:
+	$(CC) $(SEGMENTS) $(CFLAGS) $<
+	$(AS) -o $@ $(AFLAGS) $(*).s
+#	$(RM) $*.s
+
+# Rule for making a *.o file out of a *.s file
+.s.o:
+	$(AS) -t $(SYS) -I $(CC65_ASMINC) -o $@ $(AFLAGS) $<
+
+ 
+# Rule for making a *.c file out of a *.pcx file 
+#.c.pcx:
+# $(SP) -r $< -c lynx-sprite,mode=packed 
+
+lynx-stdjoy.o:
+	$(CP) $(CC65_INC)/../joy/$*.joy .
+	$(CO) --code-label _lynxjoy $*.joy
+	$(AS) -t lynx -o $@ $(AFLAGS) $*.s
+	$(RM) $*.joy
+	$(RM) $*.s
+
+lynx-160-102-16.o:
+	$(CP) $(CC65_INC)/../tgi/lynx-160-102-16.tgi . 
+	$(CO) --code-label _lynxtgi lynx-160-102-16.tgi 
+	$(AS) -t lynx -o $@ $(AFLAGS) $*.s
+	$(RM) $*.tgi
+	$(RM) $*.s
