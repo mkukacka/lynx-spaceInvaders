@@ -19,7 +19,7 @@ char SINV_NUMSHIPSX = 10;
 char SINV_NUMSHIPSY = 6;
 char SINV_SHIPGAPX = 3;
 char SINV_SHIPGAPY = 2;
-char SHIPWIDTH = 6;
+char SHIPWIDTH = 8;
 char SHIPHEIGHT = 6;
 
 sprite_pl player;
