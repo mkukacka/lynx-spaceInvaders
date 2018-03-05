@@ -26,9 +26,20 @@ sprite_pl player;
 sprite_t enemies[60];
 sprite_shot shot;
 
+// ship movement - constants
+char shipMoveMargin = 5; 	// how close to the screen border will ships switch direction
+char shipMoveCnt = 0;		// incremented on every tick, till reaches shipMoveSpeed
+char shipMoveXStep = 4;		// ship move horizontally - pixels
+char shipMoveYStep = 2;		// ship move vertically - pixels
+
+// ship movement - variables
+char shipMoveDirection = 2;	// 2 = right, 0 = left
+char shipMoveSpeed = 1; 	// per how many ticks will the ships move
+char shipXPos = 5, shipYPos = 10;	// position of the ship grid
+
 void show_screen()
 {
-	char i;
+	char i, newShipMoveDirection = shipMoveDirection;
 	// Clear current screen
 	tgi_clear();
 
@@ -36,9 +47,32 @@ void show_screen()
 	
 	// position ships
 	for(i=0; i<SINV_NUMSHIPSY * SINV_NUMSHIPSX; ++i){
-		enemies[i].sprite.hpos = enemies[i].initx + xpos;
-		enemies[i].sprite.vpos = enemies[i].inity + ypos;
+		enemies[i].sprite.hpos = enemies[i].initx + shipXPos;
+		enemies[i].sprite.vpos = enemies[i].inity + shipYPos;
+
+		if(enemies[i].sprite.hpos >= (tgi_getmaxx() - SHIPWIDTH - shipMoveMargin)){
+			// one ship is being drawn too close to right border
+			newShipMoveDirection = 0;	// turn the movement direction to left
+		}
+		if(enemies[i].sprite.hpos <= shipMoveMargin){
+			newShipMoveDirection = 2;
+		}
 	}
+
+	// move ships
+	++shipMoveCnt;
+	if(shipMoveCnt % shipMoveSpeed == 0){
+		if(newShipMoveDirection != shipMoveDirection){
+			// lower the ship if the movement direction was reversed
+			shipMoveDirection = newShipMoveDirection;
+			shipYPos += shipMoveYStep;
+		} else {
+			// move ships horizontally
+			shipXPos += ((int)shipMoveDirection - 1) * shipMoveXStep;
+		}
+		shipMoveCnt = 0;
+	}
+	
 
 	// draw ships
 	tgi_sprite(&(enemies[SINV_NUMSHIPSY * SINV_NUMSHIPSX - 1].sprite));
@@ -55,6 +89,13 @@ void show_screen()
 
 	// last, draw the screen to buffer
 	tgi_updatedisplay();
+}
+
+void reset_ships(){
+	shipMoveDirection = 2;
+	shipMoveSpeed = 7;
+	shipXPos = 5;
+	shipYPos = 10;
 }
 
 void setup_sprites(){
@@ -131,6 +172,7 @@ void initialize()
 	tgi_clear();
 
 	setup_sprites();
+	reset_ships();
 }
 
 void main(void) 
