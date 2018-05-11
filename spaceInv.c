@@ -37,6 +37,17 @@ char shipMoveDirection = 2;	// 2 = right, 0 = left
 char shipMoveSpeed = 1; 	// per how many ticks will the ships move
 char shipXPos = 5, shipYPos = 10;	// position of the ship grid
 
+// shot variables
+char shotXPos = 80, shotYPos = 50;	// test values
+char shotFired = 1;	// display the sprite or not
+
+// bomb variables - let's do one bomb for now
+char bombXPos = 40, bombYPost = 40;	// test values
+char bombFired = 1;
+
+// FOR TESTING
+char text[10];
+
 void show_screen()
 {
 	char i, newShipMoveDirection = shipMoveDirection;
@@ -72,10 +83,25 @@ void show_screen()
 		}
 		shipMoveCnt = 0;
 	}
-	
+
+	// position and draw shot
+	shot.sprite.hpos = shotXPos;
+	shot.sprite.vpos = shotYPos;
+	tgi_sprite(&(shot.sprite));
 
 	// draw ships
 	tgi_sprite(&(enemies[SINV_NUMSHIPSY * SINV_NUMSHIPSX - 1].sprite));
+
+	// check if any ship has been hit
+	for(i=0; i<SINV_NUMSHIPSY * SINV_NUMSHIPSX; ++i){
+		if(enemies[i].collindex > 0){
+			itoa(i, text, 10);
+  			tgi_outtextxy(50, 90, text);
+
+			// kill the ship
+			enemies[i].penpal[0] = 0;
+		}
+	}
 
 	// player sprite
 	player.sprite.hpos = 2 * xpos;
@@ -159,6 +185,7 @@ void initialize()
 	tgi_install(&lynxtgi);
 	joy_install(&lynxjoy);
 	tgi_init();
+	tgi_setcollisiondetection(1);
 	CLI();
 	
 	while (tgi_busy()) 
