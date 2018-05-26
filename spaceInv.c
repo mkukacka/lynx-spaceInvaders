@@ -22,9 +22,20 @@ char SINV_SHIPGAPY = 2;
 char SHIPWIDTH = 8;
 char SHIPHEIGHT = 6;
 
+char SCREEN_WIDTH;
+
 sprite_pl player;
 sprite_t enemies[60];
 sprite_shot shot;
+
+// player constants
+char playerYPos = 85;
+char playerHSpeed = 2;
+char playerSpriteWidth = 16;
+char playerSpriteHeight = 6;
+
+// player variables
+char playerXPos = 10;
 
 // ship movement - constants
 char shipMoveMargin = 5; 	// how close to the screen border will ships switch direction
@@ -36,6 +47,10 @@ char shipMoveYStep = 2;		// ship move vertically - pixels
 char shipMoveDirection = 2;	// 2 = right, 0 = left
 char shipMoveSpeed = 1; 	// per how many ticks will the ships move
 char shipXPos = 5, shipYPos = 10;	// position of the ship grid
+
+// shot constants 
+char shotVertSpeed = 5;
+char shotSpriteHeight;
 
 // shot variables
 char shotXPos = 80, shotYPos = 50;	// test values
@@ -53,15 +68,13 @@ void show_screen()
 	char i, newShipMoveDirection = shipMoveDirection;
 	// Clear current screen
 	tgi_clear();
-
-	// position and draw shot if fired
 	
 	// position ships
 	for(i=0; i<SINV_NUMSHIPSY * SINV_NUMSHIPSX; ++i){
 		enemies[i].sprite.hpos = enemies[i].initx + shipXPos;
 		enemies[i].sprite.vpos = enemies[i].inity + shipYPos;
 
-		if(enemies[i].sprite.hpos >= (tgi_getmaxx() - SHIPWIDTH - shipMoveMargin)){
+		if(enemies[i].sprite.hpos >= (SCREEN_WIDTH - SHIPWIDTH - shipMoveMargin)){
 			// one ship is being drawn too close to right border
 			newShipMoveDirection = 0;	// turn the movement direction to left
 		}
@@ -84,10 +97,20 @@ void show_screen()
 		shipMoveCnt = 0;
 	}
 
+	// move shot
+	if(shotFired){
+		if(shotYPos < shotVertSpeed) shotFired = 0;
+		shotYPos -= shotVertSpeed;
+	}
+
 	// position and draw shot
-	shot.sprite.hpos = shotXPos;
-	shot.sprite.vpos = shotYPos;
-	tgi_sprite(&(shot.sprite));
+	if(shotFired){
+		shot.sprite.hpos = shotXPos;
+		shot.sprite.vpos = shotYPos;
+		tgi_sprite(&(shot.sprite));
+	}
+
+	// TODO: position and draw bombs
 
 	// draw ships
 	tgi_sprite(&(enemies[SINV_NUMSHIPSY * SINV_NUMSHIPSX - 1].sprite));
@@ -95,17 +118,19 @@ void show_screen()
 	// check if any ship has been hit
 	for(i=0; i<SINV_NUMSHIPSY * SINV_NUMSHIPSX; ++i){
 		if(enemies[i].collindex > 0){
-			itoa(i, text, 10);
-  			tgi_outtextxy(50, 90, text);
+			// testing output of collision detection:
+			// itoa(i, text, 10);
+  			// tgi_outtextxy(50, 90, text);
 
 			// kill the ship
 			enemies[i].penpal[0] = 0;
+			shotFired = 0;
 		}
 	}
 
 	// player sprite
-	player.sprite.hpos = 2 * xpos;
-	player.sprite.vpos = 85;
+	player.sprite.hpos = playerXPos;
+	player.sprite.vpos = playerYPos;
 	tgi_sprite(&(player.sprite));
 	
 	// draw score and live counter
@@ -122,6 +147,8 @@ void reset_ships(){
 	shipMoveSpeed = 7;
 	shipXPos = 5;
 	shipYPos = 10;
+
+	shotFired = 0;
 }
 
 void setup_sprites(){
@@ -166,8 +193,8 @@ void setup_sprites(){
 	player.sprite.sprctl1 = REHV;
 	player.sprite.sprcoll = 2;
 	player.sprite.data = singlepixel_data;
-	player.sprite.hsize = 0x1000;
-	player.sprite.vsize = 0x0600;
+	player.sprite.hsize = 0x0100 * playerSpriteWidth; 
+	player.sprite.vsize = 0x0100 * playerSpriteHeight; 
 	player.penpal[0] = COLOR_WHITE;
 
 	// shot sprite
@@ -187,6 +214,8 @@ void initialize()
 	tgi_init();
 	tgi_setcollisiondetection(1);
 	CLI();
+
+	SCREEN_WIDTH = tgi_getmaxx();
 	
 	while (tgi_busy()) 
 	{ 
@@ -200,6 +229,25 @@ void initialize()
 
 	setup_sprites();
 	reset_ships();
+}
+
+void movePlayerLeft(){
+	if(playerXPos >= playerHSpeed)
+		playerXPos -= playerHSpeed;
+}
+
+void movePlayerRight(){
+	if(playerXPos <= (SCREEN_WIDTH - playerHSpeed)){
+		playerXPos += playerHSpeed;
+	}
+}
+
+void fireShot(){
+	if(!shotFired){
+		shotFired = 1;
+		shotXPos = playerXPos + playerSpriteWidth / 2;
+		shotYPos = playerYPos - shotSpriteHeight;
+	}
 }
 
 void main(void) 
@@ -220,21 +268,21 @@ void main(void)
 			ypos -= 1;
 		}
 		if(JOY_BTN_LEFT(joy)){
-			xpos -= 1;
+			movePlayerLeft();
 		}
 		if(JOY_BTN_RIGHT(joy)){
-			xpos += 1;
+			movePlayerRight();
 		}
 
 		if(JOY_BTN_FIRE(joy)){
-			fire1 = 1;
+			fireShot();
 		} else {
-			fire1 = 0;
+			//fire1 = 0;
 		}
 		if(JOY_BTN_FIRE2(joy)){
-			fire2 = 1;
+			fireShot();
 		} else {
-			fire2 = 0;
+			//fire2 = 0;
 		}
 		
         // drawing screen

@@ -7,7 +7,7 @@ Steps:
 * Movable grid of ship sprites (done)
 * Moveable player sprite (done)
 * Shot and bomb sprites
-* Collision detection
+* Collision detection (done)
 * Adjustable timer to move the ships
 * Shot destroying a ship, bomb destroying player
 * Game model 
