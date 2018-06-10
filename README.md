@@ -9,7 +9,7 @@ Steps:
 * Shot and bomb sprites
 * Collision detection (done)
 * Adjustable timer to move the ships
-* Shot destroying a ship, bomb destroying player
+* Shot destroying a ship (done), bomb destroying player
 * Game model 
   * timer adjustments
   * ship descent

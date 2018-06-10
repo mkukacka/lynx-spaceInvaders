@@ -5,18 +5,28 @@
 // screen_width = 160
 // screen_height = 102
 
-// graphic constants:
-// #define SINV_NUMSHIPSX = 10;
-// #define SINV_NUMSHIPSY = 6;
-// #define SINV_SHIPGAPX = 4;
-// #define SINV_SHIPGAPY = 3;
+// general graphic constants:
+#define NUMSHIPSX 10
+#define NUMSHIPSY 6
 
-// char SINV_NUMSHIPSX = 10;
-// char SINV_NUMSHIPSY = 6;
-// char SINV_SHIPGAPX = 4;
-// char SINV_SHIPGAPY = 3;
+#define SINV_NUMSHIPSX 10
+#define SINV_NUMSHIPSY 6
+#define SINV_SHIPGAPX 3
+#define SINV_SHIPGAPY 2
+#define SHIPWIDTH 8
+#define SHIPHEIGHT 6
 
-// #define SHIPWIDTH = 8;
-// #define SHIPHEIGHT = 8;
+// player constants
+#define PLAYER_YPOS 85
+#define PLAYER_HSPEED 2
+#define PLAYER_SPRITE_WIDTH 16
+#define PLAYER_SPRITE_HEIGHT 6
 
+// ship movement - constants
+#define SHIP_MOVE_MARGIN 5 	// how close to the screen border will ships switch direction
+#define SHIP_MOVE_XSTEP 4		// ship move horizontally - pixels
+#define SHIP_MOVE_YSTEP 2		// ship move vertically - pixels
 
+// shot constants 
+#define SHOT_VERT_SPEED 5
+#define SHOT_SPRITE_HEIGHT 4

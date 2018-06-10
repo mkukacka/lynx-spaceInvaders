@@ -15,42 +15,20 @@ extern char lynxjoy[];
 int xpos = 10, ypos = 10;
 char fire1 = 0, fire2 = 0;
 
-char SINV_NUMSHIPSX = 10;
-char SINV_NUMSHIPSY = 6;
-char SINV_SHIPGAPX = 3;
-char SINV_SHIPGAPY = 2;
-char SHIPWIDTH = 8;
-char SHIPHEIGHT = 6;
-
 char SCREEN_WIDTH;
 
 sprite_pl player;
-sprite_t enemies[60];
+sprite_t enemies[NUMSHIPSX * NUMSHIPSY];
 sprite_shot shot;
-
-// player constants
-char playerYPos = 85;
-char playerHSpeed = 2;
-char playerSpriteWidth = 16;
-char playerSpriteHeight = 6;
 
 // player variables
 char playerXPos = 10;
-
-// ship movement - constants
-char shipMoveMargin = 5; 	// how close to the screen border will ships switch direction
-char shipMoveCnt = 0;		// incremented on every tick, till reaches shipMoveSpeed
-char shipMoveXStep = 4;		// ship move horizontally - pixels
-char shipMoveYStep = 2;		// ship move vertically - pixels
 
 // ship movement - variables
 char shipMoveDirection = 2;	// 2 = right, 0 = left
 char shipMoveSpeed = 1; 	// per how many ticks will the ships move
 char shipXPos = 5, shipYPos = 10;	// position of the ship grid
-
-// shot constants 
-char shotVertSpeed = 5;
-char shotSpriteHeight;
+char shipMoveCnt = 0;		// incremented on every tick, till reaches shipMoveSpeed
 
 // shot variables
 char shotXPos = 80, shotYPos = 50;	// test values
@@ -74,11 +52,11 @@ void show_screen()
 		enemies[i].sprite.hpos = enemies[i].initx + shipXPos;
 		enemies[i].sprite.vpos = enemies[i].inity + shipYPos;
 
-		if(enemies[i].sprite.hpos >= (SCREEN_WIDTH - SHIPWIDTH - shipMoveMargin)){
+		if(enemies[i].sprite.hpos >= (SCREEN_WIDTH - SHIPWIDTH - SHIP_MOVE_MARGIN)){
 			// one ship is being drawn too close to right border
 			newShipMoveDirection = 0;	// turn the movement direction to left
 		}
-		if(enemies[i].sprite.hpos <= shipMoveMargin){
+		if(enemies[i].sprite.hpos <= SHIP_MOVE_MARGIN){
 			newShipMoveDirection = 2;
 		}
 	}
@@ -89,18 +67,18 @@ void show_screen()
 		if(newShipMoveDirection != shipMoveDirection){
 			// lower the ship if the movement direction was reversed
 			shipMoveDirection = newShipMoveDirection;
-			shipYPos += shipMoveYStep;
+			shipYPos += SHIP_MOVE_YSTEP;
 		} else {
 			// move ships horizontally
-			shipXPos += ((int)shipMoveDirection - 1) * shipMoveXStep;
+			shipXPos += ((int)shipMoveDirection - 1) * SHIP_MOVE_XSTEP;
 		}
 		shipMoveCnt = 0;
 	}
 
 	// move shot
 	if(shotFired){
-		if(shotYPos < shotVertSpeed) shotFired = 0;
-		shotYPos -= shotVertSpeed;
+		if(shotYPos < SHOT_VERT_SPEED) shotFired = 0;
+		shotYPos -= SHOT_VERT_SPEED;
 	}
 
 	// position and draw shot
@@ -130,7 +108,7 @@ void show_screen()
 
 	// player sprite
 	player.sprite.hpos = playerXPos;
-	player.sprite.vpos = playerYPos;
+	player.sprite.vpos = PLAYER_YPOS;
 	tgi_sprite(&(player.sprite));
 	
 	// draw score and live counter
@@ -193,8 +171,8 @@ void setup_sprites(){
 	player.sprite.sprctl1 = REHV;
 	player.sprite.sprcoll = 2;
 	player.sprite.data = singlepixel_data;
-	player.sprite.hsize = 0x0100 * playerSpriteWidth; 
-	player.sprite.vsize = 0x0100 * playerSpriteHeight; 
+	player.sprite.hsize = 0x0100 * PLAYER_SPRITE_WIDTH; 
+	player.sprite.vsize = 0x0100 * PLAYER_SPRITE_HEIGHT; 
 	player.penpal[0] = COLOR_WHITE;
 
 	// shot sprite
@@ -203,7 +181,7 @@ void setup_sprites(){
 	shot.sprite.sprcoll = 3;
 	shot.sprite.data = singlepixel_data;
 	shot.sprite.hsize = 0x0100;
-	shot.sprite.vsize = 0x0400;
+	shot.sprite.vsize = 0x0100 * SHOT_SPRITE_HEIGHT;
 	shot.penpal[0] = COLOR_RED;
 }
 
@@ -232,21 +210,21 @@ void initialize()
 }
 
 void movePlayerLeft(){
-	if(playerXPos >= playerHSpeed)
-		playerXPos -= playerHSpeed;
+	if(playerXPos >= PLAYER_HSPEED)
+		playerXPos -= PLAYER_HSPEED;
 }
 
 void movePlayerRight(){
-	if(playerXPos <= (SCREEN_WIDTH - playerHSpeed)){
-		playerXPos += playerHSpeed;
+	if(playerXPos <= (SCREEN_WIDTH - PLAYER_HSPEED)){
+		playerXPos += PLAYER_HSPEED;
 	}
 }
 
 void fireShot(){
 	if(!shotFired){
 		shotFired = 1;
-		shotXPos = playerXPos + playerSpriteWidth / 2;
-		shotYPos = playerYPos - shotSpriteHeight;
+		shotXPos = playerXPos + PLAYER_SPRITE_WIDTH / 2;
+		shotYPos = PLAYER_YPOS - SHOT_SPRITE_HEIGHT;
 	}
 }
 
