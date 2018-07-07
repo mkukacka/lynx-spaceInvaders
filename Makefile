@@ -3,7 +3,7 @@ include Makefile_lynxcc65.mk
 
 target = spaceInv.lnx
 objects = lynx-160-102-16.o lynx-stdjoy.o \
-	spaceInv.o
+	sprites.o spaceInv.o
 
 # robot.o: robot.bmp
 # 	$(SPRPCK) -t6 -p2 -a004003 robot.bmp

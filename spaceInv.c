@@ -6,8 +6,8 @@
 #include <peekpoke.h>
 #include <joystick.h>
 
-#include <consts.h>
-#include <sprites.h>
+#include "consts.h"
+#include "sprites.h"
 
 extern char lynxtgi[];
 extern char lynxjoy[];
@@ -138,51 +138,16 @@ void setup_sprites(){
 		for(j=0; j<SINV_NUMSHIPSX; ++j){
 			
 			sprite = &enemies[j + i*SINV_NUMSHIPSX];
-			sprite->sprite.sprctl0 = BPP_1 | TYPE_NORMAL,
-    		sprite->sprite.sprctl1 = REHV,
-			sprite->sprite.sprcoll = 1,
-			sprite->sprite.data = singlepixel_data; 
-			sprite->sprite.next = next;
-			sprite->sprite.hsize = 0x0100 * SHIPWIDTH;
-			sprite->sprite.vsize = 0x0100 * SHIPHEIGHT;
-			sprite->initx = j * (SHIPWIDTH + SINV_SHIPGAPX);
-			sprite->inity = i * (SHIPHEIGHT + SINV_SHIPGAPY);
-			//sprite->palette[1] = (color << 4) + color + 1;
-			switch(i % 3){
-				case 0:
-					sprite->penpal[0] = COLOR_GREEN;
-					break;
-				case 1:
-					sprite->penpal[0] = COLOR_RED;
-					break;
-				case 2:
-					sprite->penpal[0] = COLOR_BLUE;
-					break;
-				default:
-					sprite->penpal[0] = COLOR_WHITE;
-					break;
-			}
+			createEnemySprite(i, j, sprite, next);
 			next = &sprite->sprite;
 		}
 	}
 
 	// player sprite
-	player.sprite.sprctl0 = BPP_1 | TYPE_NORMAL;
-	player.sprite.sprctl1 = REHV;
-	player.sprite.sprcoll = 2;
-	player.sprite.data = singlepixel_data;
-	player.sprite.hsize = 0x0100 * PLAYER_SPRITE_WIDTH; 
-	player.sprite.vsize = 0x0100 * PLAYER_SPRITE_HEIGHT; 
-	player.penpal[0] = COLOR_WHITE;
+	createPlayerSprite(&player);
 
 	// shot sprite
-	shot.sprite.sprctl0 = BPP_1 | TYPE_NORMAL;
-	shot.sprite.sprctl1 = REHV;
-	shot.sprite.sprcoll = 3;
-	shot.sprite.data = singlepixel_data;
-	shot.sprite.hsize = 0x0100;
-	shot.sprite.vsize = 0x0100 * SHOT_SPRITE_HEIGHT;
-	shot.penpal[0] = COLOR_RED;
+	createShotSprite(&shot);
 }
 
 void initialize()

@@ -1,4 +1,7 @@
 
+
+#ifndef _CONSTANTS
+#define _CONSTANTS
 // chosen project-specific prefix for constants: SINV
 
 // constants present somewhere in TGI: getxres, getyres functions
@@ -30,3 +33,5 @@
 // shot constants 
 #define SHOT_VERT_SPEED 5
 #define SHOT_SPRITE_HEIGHT 4
+
+#endif

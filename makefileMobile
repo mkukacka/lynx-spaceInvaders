@@ -2,7 +2,7 @@ include makefileMobike-common
 
 target = spaceInv.lnx
 objects = lynx-160-102-16.o lynx-stdjoy.o \
-	spaceInv.o
+	sprites.o spaceInv.o
 
 all: $(target)
 
