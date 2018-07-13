@@ -15,6 +15,44 @@ unsigned char singlepixel_data[] = { 0x03, 0x87, 0x80, 0x00 }; // 1 0000 111 1 0
 //   three bytes (0x03, 0x87, 0x80), so the offset points to 0x00, which denotes end of sprite
 // for explanation: see Handy Specification.tif, page 25
 
+// BUNKERS:
+// how should the bunker look like, half size: 
+// ...XXXX...
+// .XXXXXXXX.
+// XXXXXXXXXX
+// XXX....XXX
+
+// so in bits (20 pixels, 6 rows):
+// 0000 0011 1111 1100 0000
+// 0000 1111 1111 1111 0000
+// 0011 1111 1111 1111 1100
+// 1111 1111 1111 1111 1111
+// 1111 1111 1111 1111 1111
+// 1111 1100 0000 0011 1111
+
+// with row headers:
+// 1 0100 0000 0011 1111 1100 0000 etc.
+
+// + shifted:
+// 1010 0000 0001 1111 1110 0000 0000
+// 1010 0000 0111 1111 1111 1000 0000
+// 1010 0001 1111 1111 1111 1110 0000
+// 1010 0111 1111 1111 1111 1111 1000
+// 1010 0111 1111 1111 1111 1111 1000
+// 1010 0111 1110 0000 0001 1111 1000
+
+// and in hexa:
+// 0xA0, 0x1F, 0xD0, 0x00
+// 0xA0, 0x7F, 0xF8, 0x00
+// 0xA1, 0xFF, 0xFD, 0x00
+// 0xA7, 0xFF, 0xFF, 0x80
+// 0xA7, 0xFF, 0xFF, 0x80
+// 0xA7, 0xD0, 0x1F, 0x80
+
+void createBunkerSprite(sprite_bunker* bunker, unsigned char * data){
+
+}
+
 void createEnemySprite(int i, int j, sprite_t* sprite, void* next){
     sprite->sprite.sprctl0 = BPP_1 | TYPE_NORMAL,
     sprite->sprite.sprctl1 = REHV,

@@ -20,6 +20,7 @@ char SCREEN_WIDTH;
 sprite_pl player;
 sprite_t enemies[NUMSHIPSX * NUMSHIPSY];
 sprite_shot shot;
+sprite_bunker bunkers[4];
 
 // player variables
 char playerXPos = 10;

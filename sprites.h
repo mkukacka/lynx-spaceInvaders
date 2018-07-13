@@ -28,10 +28,17 @@ typedef struct {
   PENPAL_1;   // pallete structure for 1-bit color pallete (1 color and background) (from _suzy.h)
 } sprite_shot;
 
+typedef struct {
+  char collindex;   // collision index
+  SCB_REHV sprite;  // sprite structure with position and size, without stretch and tilt (from _suzy.h)
+  PENPAL_1;   // pallete structure for 1-bit color pallete (1 color and background) (from _suzy.h)
+} sprite_bunker;
+
 // function declarations:
 void createEnemySprite(int i, int j, sprite_t* enemy, void* next);
 void createPlayerSprite(sprite_pl* player);
 void createShotSprite(sprite_shot* shot);
+void createBunkerSprite(sprite_bunker* bunker, unsigned char * data);
 
 
 #endif
