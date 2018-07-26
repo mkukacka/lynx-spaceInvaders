@@ -43,6 +43,10 @@ char bombFired = 1;
 // FOR TESTING
 char text[10];
 
+void processBunkerHit(sprite_bunker* bunker){
+	// TODO
+}
+
 void show_screen()
 {
 	char i, newShipMoveDirection = shipMoveDirection;
@@ -77,17 +81,17 @@ void show_screen()
 		shipMoveCnt = 0;
 	}
 
-	// move shot
-	if(shotFired){
-		if(shotYPos < SHOT_VERT_SPEED) shotFired = 0;
-		shotYPos -= SHOT_VERT_SPEED;
-	}
-
 	// position and draw shot
 	if(shotFired){
 		shot.sprite.hpos = shotXPos;
 		shot.sprite.vpos = shotYPos;
 		tgi_sprite(&(shot.sprite));
+	}
+
+	// move shot
+	if(shotFired){
+		if(shotYPos < SHOT_VERT_SPEED) shotFired = 0;
+		shotYPos -= SHOT_VERT_SPEED;
 	}
 
 	// TODO: position and draw bombs
@@ -116,7 +120,13 @@ void show_screen()
 	// bunker sprite
 	for(i = 0; i < BUNKER_CNT; ++i){
 		tgi_sprite(&(bunkers[i].sprite));
+		if(bunkers[i].collindex > 0){
+			// bunker hit
+			processBunkerHit(&(bunkers[i]));
+		}
 	}
+
+
 	
 	// draw score and live counter
 	tgi_setcolor(COLOR_WHITE);
@@ -126,6 +136,7 @@ void show_screen()
 	// last, draw the screen to buffer
 	tgi_updatedisplay();
 }
+
 
 void reset_ships(){
 	shipMoveDirection = 2;
@@ -158,6 +169,8 @@ void setup_sprites(){
 
 	for(i = 0; i < BUNKER_CNT; ++i){
 		createBunkerSprite(&bunkers[i], &(bunkerData[i*BUNKER_DATA_LEN]));
+		bunkers[i].sprite.vpos = BUNKER_YPOS;
+		bunkers[i].sprite.hpos = BUNKER_LEFT_OFFSET + i*BUNKER_GAP;
 	}
 }
 
@@ -191,7 +204,7 @@ void movePlayerLeft(){
 }
 
 void movePlayerRight(){
-	if(playerXPos <= (SCREEN_WIDTH - PLAYER_HSPEED)){
+	if(playerXPos <= (SCREEN_WIDTH - PLAYER_HSPEED - PLAYER_SPRITE_WIDTH)){
 		playerXPos += PLAYER_HSPEED;
 	}
 }

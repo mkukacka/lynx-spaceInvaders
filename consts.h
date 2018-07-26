@@ -37,6 +37,9 @@
 // bunker constants
 #define BUNKER_CNT 4
 #define BUNKER_DATA_LEN 31
+#define BUNKER_YPOS 75
+#define BUNKER_LEFT_OFFSET 15
+#define BUNKER_GAP 36
 
 
 #endif
