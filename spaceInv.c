@@ -20,7 +20,8 @@ char SCREEN_WIDTH;
 sprite_pl player;
 sprite_t enemies[NUMSHIPSX * NUMSHIPSY];
 sprite_shot shot;
-sprite_bunker bunkers[4];
+sprite_bunker bunkers[BUNKER_CNT];
+unsigned char bunkerData[BUNKER_CNT * BUNKER_DATA_LEN];
 
 // player variables
 char playerXPos = 10;
@@ -111,6 +112,11 @@ void show_screen()
 	player.sprite.hpos = playerXPos;
 	player.sprite.vpos = PLAYER_YPOS;
 	tgi_sprite(&(player.sprite));
+
+	// bunker sprite
+	for(i = 0; i < BUNKER_CNT; ++i){
+		tgi_sprite(&(bunkers[i].sprite));
+	}
 	
 	// draw score and live counter
 	tgi_setcolor(COLOR_WHITE);
@@ -149,6 +155,10 @@ void setup_sprites(){
 
 	// shot sprite
 	createShotSprite(&shot);
+
+	for(i = 0; i < BUNKER_CNT; ++i){
+		createBunkerSprite(&bunkers[i], &(bunkerData[i*BUNKER_DATA_LEN]));
+	}
 }
 
 void initialize()

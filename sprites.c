@@ -42,21 +42,48 @@ unsigned char singlepixel_data[] = { 0x03, 0x87, 0x80, 0x00 }; // 1 0000 111 1 0
 // 1010 0111 1110 0000 0001 1111 1000
 
 // and in hexa:
-// 0xA0, 0x1F, 0xD0, 0x00
+// 0xA0, 0x1F, 0xE0, 0x00
 // 0xA0, 0x7F, 0xF8, 0x00
-// 0xA1, 0xFF, 0xFD, 0x00
+// 0xA1, 0xFF, 0xFE, 0x00
 // 0xA7, 0xFF, 0xFF, 0x80
 // 0xA7, 0xFF, 0xFF, 0x80
-// 0xA7, 0xD0, 0x1F, 0x80
+// 0xA7, 0xE0, 0x1F, 0x80
+
+// ok, so this does not work as expected, clearly I am still missing something
+// BUT, if I specify the type LITERAL into sprctl1, the data will be interpreted 
+//   literally, so perhaps this could even be a better way?
+
+// ok, no, LITERAL will now work too well, since the data about line sizes 
+//      still need to be there it seem
+// but perhaps I can make the stuff above work? Perhaps I misinterpretted it, which I can now see 
+// in the result of drawing the sprite? I guess the NUMBER OF PIXELS can describe the repetition?
+
 
 void createBunkerSprite(sprite_bunker* bunker, unsigned char * data){
+    bunker->sprite.sprctl0 = BPP_1 | TYPE_NORMAL;
+    bunker->sprite.sprctl1 = REHV | LITERAL;
+    bunker->sprite.sprcoll = 4;
+    
+    // for test: 
+    //bunker->sprite.data = sprite_test_data2; 
+    bunker->sprite.data = one_more_bunker_test; 
+    //bunker->sprite.data = bunker_template;
+    bunker->sprite.hpos = 20;
+    bunker->sprite.vpos = 40;
+    bunker->sprite.hsize = 0x0100;
+    bunker->sprite.vsize = 0x0100;
+    bunker->penpal[0] = COLOR_GREEN;
 
+    //bunker->sprite.data = singlepixel_data;
+    // for(char i = 0; i < BUNKER_DATA_LEN; ++i){
+
+    // }
 }
 
 void createEnemySprite(int i, int j, sprite_t* sprite, void* next){
-    sprite->sprite.sprctl0 = BPP_1 | TYPE_NORMAL,
-    sprite->sprite.sprctl1 = REHV,
-    sprite->sprite.sprcoll = 1,
+    sprite->sprite.sprctl0 = BPP_1 | TYPE_NORMAL;
+    sprite->sprite.sprctl1 = REHV;
+    sprite->sprite.sprcoll = 1;
     sprite->sprite.data = singlepixel_data; 
     sprite->sprite.next = next;
     sprite->sprite.hsize = 0x0100 * SHIPWIDTH;

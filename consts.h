@@ -34,4 +34,9 @@
 #define SHOT_VERT_SPEED 5
 #define SHOT_SPRITE_HEIGHT 4
 
+// bunker constants
+#define BUNKER_CNT 4
+#define BUNKER_DATA_LEN 31
+
+
 #endif
