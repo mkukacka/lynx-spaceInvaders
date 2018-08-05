@@ -41,5 +41,9 @@
 #define BUNKER_LEFT_OFFSET 15
 #define BUNKER_GAP 36
 
+// bomb constants
+#define BOMB_SPRITE_HEIGHT 3
+#define BOMB_VERT_SPEED 5
+
 
 #endif

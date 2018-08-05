@@ -37,8 +37,12 @@ char shotXPos = 80, shotYPos = 50;	// test values
 char shotFired = 1;	// display the sprite or not
 
 // bomb variables - let's do one bomb for now
-char bombXPos = 40, bombYPost = 40;	// test values
-char bombFired = 1;
+// char bombXPos = 40, bombYPost = 40;	// test values
+// char bombFired = 1;
+
+// bombs - several bombs possible at once, with random probability,
+//  can be destroyed with shots
+//  only the bottom-most ship in the column can produce a bomb
 
 // FOR TESTING
 char text[10];

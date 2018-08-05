@@ -96,3 +96,13 @@ void createShotSprite(sprite_shot* shot){
 	shot->sprite.vsize = 0x0100 * SHOT_SPRITE_HEIGHT;
 	shot->penpal[0] = COLOR_RED;
 }
+
+void createBombSprite(sprite_shot* shot){
+    shot->sprite.sprctl0 = BPP_1 | TYPE_NORMAL;
+	shot->sprite.sprctl1 = REHV;
+	shot->sprite.sprcoll = 3;
+	shot->sprite.data = singlepixel_data;
+	shot->sprite.hsize = 0x0100;
+	shot->sprite.vsize = 0x0100 * SHOT_SPRITE_HEIGHT;
+	shot->penpal[0] = COLOR_YELLOW;
+}
