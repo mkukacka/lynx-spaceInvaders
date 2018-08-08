@@ -1,9 +1,17 @@
 
-CC65=D:\workspace-lynx\CC65
+CC65=\workspace-lynx\CC65
 CC65_BIN=$(CC65)\bin
 CC65_INC=$(CC65)\include
 CC65_ASMINC=$(CC65)\asminc
 CC65_TOOLS=$(CC65)\wbin
+
+# Don't forget to create new environment variables (fix path to CC65):
+# CA65_INC: C:\Program Files\CC65\asminc
+# CC65_INC: C:\Program Files\CC65\include
+# CC65_HOME: C:\Program Files\CC65
+# LD65_CFG: C:\Program Files\CC65\cfg
+# LD65_LIB: C:\Program Files\CC65\lib
+# LD65_OBJ: C:\Program Files\CC65\obj
 
 CP=$(CC65_TOOLS)\cp
 RM=$(CC65_TOOLS)\rm -f

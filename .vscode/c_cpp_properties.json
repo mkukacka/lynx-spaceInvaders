@@ -48,7 +48,8 @@
                 "C:/Program Files (x86)/Microsoft Visual Studio 14.0/VC/include/*",
                 "C:/Program Files (x86)/Windows Kits/8.1/Include/um",
                 "${workspaceRoot}",
-                "D:/workspace-lynx/CC65/include"
+                "D:/workspace-lynx/CC65/include",
+                "c:/workspace-lynx/CC65/include"
             ],
             "defines": [
                 "_DEBUG",
@@ -60,7 +61,8 @@
                     "C:/Program Files (x86)/Microsoft Visual Studio 14.0/VC/include/*",
                     "C:/Program Files (x86)/Windows Kits/8.1/Include/um",
                     "${workspaceRoot}",
-                    "D:/workspace-lynx/CC65/include"
+                    "D:/workspace-lynx/CC65/include",
+                    "c:/workspace-lynx/CC65/include"
                 ],
                 "limitSymbolsToIncludedHeaders": true,
                 "databaseFilename": ""
