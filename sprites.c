@@ -60,6 +60,7 @@ void createEnemySprite(int i, int j, sprite_t* sprite, void* next){
     sprite->sprite.vsize = 0x0100 * SHIPHEIGHT;
     sprite->initx = j * (SHIPWIDTH + SINV_SHIPGAPX);
     sprite->inity = i * (SHIPHEIGHT + SINV_SHIPGAPY);
+    sprite->alive = 1;
     
     switch(i % 3){
         case 0:
@@ -97,12 +98,12 @@ void createShotSprite(sprite_shot* shot){
 	shot->penpal[0] = COLOR_RED;
 }
 
-void createBombSprite(sprite_shot* shot){
+void createBombSprite(sprite_bomb* shot){
     shot->sprite.sprctl0 = BPP_1 | TYPE_NORMAL;
 	shot->sprite.sprctl1 = REHV;
 	shot->sprite.sprcoll = 3;
 	shot->sprite.data = singlepixel_data;
 	shot->sprite.hsize = 0x0100;
-	shot->sprite.vsize = 0x0100 * SHOT_SPRITE_HEIGHT;
+	shot->sprite.vsize = 0x0100 * BOMB_SPRITE_HEIGHT;
 	shot->penpal[0] = COLOR_YELLOW;
 }

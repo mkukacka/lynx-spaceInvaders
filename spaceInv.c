@@ -22,6 +22,7 @@ sprite_t enemies[NUMSHIPSX * NUMSHIPSY];
 sprite_shot shot;
 sprite_bunker bunkers[BUNKER_CNT];
 unsigned char bunkerData[BUNKER_CNT * BUNKER_DATA_LEN];
+sprite_bomb *bombs = null;	// linked list
 
 // player variables
 char playerXPos = 10;
@@ -51,9 +52,25 @@ void processBunkerHit(sprite_bunker* bunker){
 	// TODO
 }
 
+void createNewBomb(int x, int y){
+	sprite_bomb * prev = null, current = bombs;
+	sprite_bomb * bomb = (sprite_bomb*)malloc(sizeof(sprite_bomb));
+	createBombSprite(bomb);
+	// todo add the bomb to the linked list
+	
+	while(current != null){
+		// TODO
+	}
+}
+
+void destroyBomb(sprite_bomb *bomb){
+	free(bomb);
+}
+
 void show_screen()
 {
-	char i, newShipMoveDirection = shipMoveDirection;
+	char i, j, newShipMoveDirection = shipMoveDirection;
+	char lowestShipInColumnIndex;
 	// Clear current screen
 	tgi_clear();
 	
@@ -68,6 +85,30 @@ void show_screen()
 		}
 		if(enemies[i].sprite.hpos <= SHIP_MOVE_MARGIN){
 			newShipMoveDirection = 2;
+		}
+	}
+
+	// init bombs
+	for(i=0; i<SINV_NUMSHIPSX; ++i){
+		// find if there is any alive ship in this column
+		lowestShipInColumnIndex = SINV_NUMSHIPSY;
+		for(j=0; j<SINV_NUMSHIPSY; ++j){
+			if(enemies[i + j*SINV_NUMSHIPSX].alive){
+				lowestShipInColumnIndex = j;
+			}
+		}
+
+		// find if a bomb should be dropped from this column
+		if(lowestShipInColumnIndex < SINV_NUMSHIPSY){	// if there is any alive ship in this column
+			// roll the dice
+			if( (rand() % 100) < 5){
+				// init new bomb
+				createNewBomb(
+					enemies[i + lowestShipInColumnIndex * SINV_NUMSHIPSX].sprite.hpos,
+					enemies[i + lowestShipInColumnIndex * SINV_NUMSHIPSX].sprite.vpos
+				);
+
+			}
 		}
 	}
 
@@ -112,6 +153,7 @@ void show_screen()
 
 			// kill the ship
 			enemies[i].penpal[0] = 0;
+			enemies[i].alive = 0;
 			shotFired = 0;
 		}
 	}
