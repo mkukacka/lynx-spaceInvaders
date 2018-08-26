@@ -22,7 +22,7 @@ sprite_t enemies[NUMSHIPSX * NUMSHIPSY];
 sprite_shot shot;
 sprite_bunker bunkers[BUNKER_CNT];
 unsigned char bunkerData[BUNKER_CNT * BUNKER_DATA_LEN];
-sprite_bomb *bombs = null;	// linked list
+sprite_bomb *bombs = 0;	// linked list
 
 // player variables
 char playerXPos = 10;
@@ -53,17 +53,32 @@ void processBunkerHit(sprite_bunker* bunker){
 }
 
 void createNewBomb(int x, int y){
-	sprite_bomb * prev = null, current = bombs;
+	sprite_bomb * prev = 0, *current = bombs;
 	sprite_bomb * bomb = (sprite_bomb*)malloc(sizeof(sprite_bomb));
 	createBombSprite(bomb);
-	// todo add the bomb to the linked list
+	bomb->sprite.hpos = x;
+	bomb->sprite.vpos = y;
 	
-	while(current != null){
-		// TODO
+	if(bombs != 0){
+		while(current != 0){
+			prev = current;
+			current = current->next;
+		}
+		
+		prev->next = bomb;
+	} else {
+		bombs = bomb;
 	}
+	bomb->next = 0;
 }
 
 void destroyBomb(sprite_bomb *bomb){
+	sprite_bomb * prev = 0, *current = bombs;
+	while(current != bomb){
+		prev = current;
+		current = current->next;
+	}
+	prev->next = current->next;
 	free(bomb);
 }
 
@@ -71,6 +86,7 @@ void show_screen()
 {
 	char i, j, newShipMoveDirection = shipMoveDirection;
 	char lowestShipInColumnIndex;
+	sprite_bomb * bomb = bombs;
 	// Clear current screen
 	tgi_clear();
 	
@@ -88,7 +104,9 @@ void show_screen()
 		}
 	}
 
-	// init bombs
+	// init bombs 
+	// - this way there is larger chance to have a bomb when there are more alive columns
+	// - possibly this may not be the ideal way, but let's try it, it might be interesting
 	for(i=0; i<SINV_NUMSHIPSX; ++i){
 		// find if there is any alive ship in this column
 		lowestShipInColumnIndex = SINV_NUMSHIPSY;
@@ -101,7 +119,7 @@ void show_screen()
 		// find if a bomb should be dropped from this column
 		if(lowestShipInColumnIndex < SINV_NUMSHIPSY){	// if there is any alive ship in this column
 			// roll the dice
-			if( (rand() % 100) < 5){
+			if( (rand() % 100) < 2){
 				// init new bomb
 				createNewBomb(
 					enemies[i + lowestShipInColumnIndex * SINV_NUMSHIPSX].sprite.hpos,
@@ -139,14 +157,19 @@ void show_screen()
 		shotYPos -= SHOT_VERT_SPEED;
 	}
 
-	// TODO: position and draw bombs
+	// position and draw bombs
+	while(bomb != 0){
+		tgi_sprite(&(bomb->sprite));
+		bomb->sprite.vpos += BOMB_VERT_SPEED;
+		bomb = bomb->next;
+	}
 
 	// draw ships
 	tgi_sprite(&(enemies[SINV_NUMSHIPSY * SINV_NUMSHIPSX - 1].sprite));
 
 	// check if any ship has been hit
 	for(i=0; i<SINV_NUMSHIPSY * SINV_NUMSHIPSX; ++i){
-		if(enemies[i].collindex > 0){
+		if(enemies[i].collindex == 3){
 			// testing output of collision detection:
 			// itoa(i, text, 10);
   			// tgi_outtextxy(50, 90, text);
@@ -171,8 +194,6 @@ void show_screen()
 			processBunkerHit(&(bunkers[i]));
 		}
 	}
-
-
 	
 	// draw score and live counter
 	tgi_setcolor(COLOR_WHITE);

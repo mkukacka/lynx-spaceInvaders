@@ -101,7 +101,7 @@ void createShotSprite(sprite_shot* shot){
 void createBombSprite(sprite_bomb* shot){
     shot->sprite.sprctl0 = BPP_1 | TYPE_NORMAL;
 	shot->sprite.sprctl1 = REHV;
-	shot->sprite.sprcoll = 3;
+	shot->sprite.sprcoll = 4;
 	shot->sprite.data = singlepixel_data;
 	shot->sprite.hsize = 0x0100;
 	shot->sprite.vsize = 0x0100 * BOMB_SPRITE_HEIGHT;

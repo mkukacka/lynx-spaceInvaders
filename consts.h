@@ -43,7 +43,7 @@
 
 // bomb constants
 #define BOMB_SPRITE_HEIGHT 3
-#define BOMB_VERT_SPEED 5
+#define BOMB_VERT_SPEED 4
 
 
 #endif
